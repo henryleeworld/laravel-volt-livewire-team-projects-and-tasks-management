@@ -20,11 +20,15 @@
                     @can('viewAny', App\Models\Task::class)
                         <flux:navlist.item icon="clipboard-document-list" :href="route('tasks.index')" :current="request()->routeIs('tasks.*')" wire:navigate>{{ __('Tasks') }}</flux:navlist.item>
                     @endcan
+                    @can('manage-billing')
+                        <flux:navlist.item icon="credit-card" :href="route('billing.index')" :current="request()->routeIs('billing.*')" wire:navigate>{{ __('Billing') }}</flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
 
                 @can('users.viewAny')
                     <flux:navlist.group :heading="__('Administration')" class="grid">
                         <flux:navlist.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                        <flux:navlist.item icon="clock" :href="route('activity-log.index')" :current="request()->routeIs('activity-log.*')" wire:navigate>{{ __('Activity Log') }}</flux:navlist.item>
                     </flux:navlist.group>
                 @endcan
             </flux:navlist>

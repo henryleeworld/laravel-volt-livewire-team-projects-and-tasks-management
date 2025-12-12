@@ -35,8 +35,8 @@ $ npm run build
 ----
 
 ## 畫面截圖
-![](https://i.imgur.com/HTghsZG.png)
+![](https://i.imgur.com/y7FBw9j.png)
 > 確認需求、定義成功標準，並評估可行性及風險，確保專案具備明確方向
 
-![](https://i.imgur.com/sAhDSXl.png)
+![](https://i.imgur.com/T0EEkLz.png)
 > 將複雜任務拆解為清晰、可控的步驟，且每個階段皆有明確目標

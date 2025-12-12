@@ -29,6 +29,25 @@ class TaskController extends Controller
     }
 
     /**
+     * Display the resource.
+     */
+    public function show(Task $task): View
+    {
+        Gate::authorize('view', $task);
+
+        $activities = $task->activities()
+            ->with('causer')
+            ->orderByDesc('created_at')
+            ->take(10)
+            ->get();
+
+        return view('tasks.show', [
+            'task' => $task,
+            'activities' => $activities,
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create(): View
@@ -43,6 +62,14 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request): RedirectResponse
     {
+        if (! $request->user()->organization->canCreateTask()) {
+            $limit = $request->user()->organization->getTaskLimit();
+
+            return redirect()
+                ->route('billing.index')
+                ->with('error', __('You\'ve reached your limit of :limit tasks. Upgrade to create more.', ['limit' => $limit]));
+        }
+
         $validated = $request->validated();
 
         Task::create([
@@ -55,18 +82,6 @@ class TaskController extends Controller
         return redirect()
             ->route('tasks.index')
             ->with('success', __('Task created successfully.'));
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task): View
-    {
-        Gate::authorize('view', $task);
-
-        return view('tasks.show', [
-            'task' => $task,
-        ]);
     }
 
     /**

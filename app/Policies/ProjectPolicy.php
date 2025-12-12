@@ -12,7 +12,8 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('projects.viewAny');
+        return $user->hasPermissionTo('projects.viewAny')
+            && $user->organization->canAccessProjects();
     }
 
     /**
@@ -21,7 +22,8 @@ class ProjectPolicy
     public function view(User $user, Project $project): bool
     {
         return $user->hasPermissionTo('projects.view')
-            && $project->organization_id === $user->organization_id;
+            && $project->organization_id === $user->organization_id
+            && $user->organization->canAccessProjects();
     }
 
     /**
@@ -29,7 +31,8 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('projects.create');
+        return $user->hasPermissionTo('projects.create')
+            && $user->organization->canAccessProjects();
     }
 
     /**

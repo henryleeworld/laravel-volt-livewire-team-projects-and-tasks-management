@@ -16,6 +16,7 @@
             </flux:callout>
         @endif
 
+        @if (auth()->user()->organization->canAccessProjects())
         <div class="overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
             <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
                 <thead class="bg-zinc-50 dark:bg-zinc-800">
@@ -86,8 +87,18 @@
                 </tbody>
             </table>
         </div>
+        @else
+        <div class="rounded-lg border border-zinc-200 bg-white p-8 text-center dark:border-zinc-700 dark:bg-zinc-900">
+            <div class="mx-auto max-w-md space-y-4">
+                <flux:heading size="lg">{{ __('Upgrade to Access Projects') }}</flux:heading>
+                <flux:text class="text-zinc-600 dark:text-zinc-400">
+                    {{ __('Projects are available on Pro and Ultimate plans. Upgrade now to unlock project management.') }}
+                </flux:text>
+                <flux:button variant="primary" :href="route('billing.index')" icon="sparkles">
+                    {{ __('View Plans') }}
+                </flux:button>
+            </div>
+        </div>
+        @endif
     </div>
 </x-layouts.app>
-
-
-

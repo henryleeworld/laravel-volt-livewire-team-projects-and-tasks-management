@@ -49,6 +49,32 @@
                     </div>
                 </dl>
             </div>
+            @if ($activities->isNotEmpty())
+                <div class="mt-6 overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+                    <div class="border-b border-zinc-200 bg-zinc-50 px-6 py-3 dark:border-zinc-700 dark:bg-zinc-800">
+                        <flux:heading size="lg">{{ __('Recent Activity') }}</flux:heading>
+                    </div>
+                    <div class="divide-y divide-zinc-200 dark:divide-zinc-700">
+                        @foreach ($activities as $activity)
+                            <div class="px-6 py-4">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex-1">
+                                        <flux:text class="font-medium text-zinc-900 dark:text-zinc-100">
+                                            {{ $activity->description }}
+                                        </flux:text>
+                                        <flux:text class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                                            {{ __('By ') . $activity->causer?->name ?? __('System') }}
+                                        </flux:text>
+                                    </div>
+                                    <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">
+                                        {{ $activity->created_at->diffForHumans() }}
+                                    </flux:text>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </x-layouts.app>

@@ -64,8 +64,15 @@ class ProjectController extends Controller
     {
         Gate::authorize('view', $project);
 
+        $activities = $project->activities()
+            ->with('causer')
+            ->orderByDesc('created_at')
+            ->take(10)
+            ->get();
+
         return view('projects.show', [
             'project' => $project,
+            'activities' => $activities,
         ]);
     }
 

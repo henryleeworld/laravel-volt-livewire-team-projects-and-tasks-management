@@ -95,4 +95,11 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => null,
         ]);
     }
+
+    public function withProjectAccess(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'organization_id' => Organization::factory()->withProSubscription(),
+        ]);
+    }
 }
