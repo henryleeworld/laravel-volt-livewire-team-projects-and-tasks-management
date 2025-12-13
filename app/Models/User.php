@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Enums\RoleEnum;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -29,6 +29,7 @@ class User extends Authenticatable
         'oauth_provider',
         'oauth_id',
         'email_verified_at',
+        'email_notifications',
         'organization_id',
     ];
 
@@ -53,6 +54,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'email_notifications' => 'boolean',
             'password' => 'hashed',
         ];
     }

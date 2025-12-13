@@ -24,6 +24,7 @@ class Task extends Model
         'description',
         'user_id',
         'organization_id',
+        'assigned_to_user_id',
     ];
 
     /**
@@ -42,10 +43,15 @@ class Task extends Model
         return $this->belongsTo(Organization::class);
     }
 
+    public function assignedToUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to_user_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'description', 'user_id', 'organization_id'])
+            ->logOnly(['name', 'description', 'user_id', 'organization_id', 'assigned_to_user_id'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn (string $eventName) => __('Task has been :event_name', ['event_name' => __($eventName)]));
     }

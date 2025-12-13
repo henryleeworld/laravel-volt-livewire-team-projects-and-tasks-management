@@ -27,6 +27,8 @@
                 @endif
             </div>
 
+            <flux:checkbox wire:model="email_notifications" :label="__('Send email notifications when assigned a new task')" />
+
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
                     <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>

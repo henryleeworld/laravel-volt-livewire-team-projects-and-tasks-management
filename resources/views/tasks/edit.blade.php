@@ -40,6 +40,24 @@
                         @enderror
                     </div>
 
+                    <div>
+                        <flux:select
+                            name="assigned_to_user_id"
+                            :label="__('Assign To')"
+                            :placeholder="__('Select a user (optional)')"
+                        >
+                            <option value="">{{ __('Unassigned') }}</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" @selected(old('assigned_to_user_id', $task->assigned_to_user_id) == $user->id)>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </flux:select>
+                        @error('assigned_to_user_id')
+                            <flux:text class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</flux:text>
+                        @enderror
+                    </div>
+
                     <div class="flex items-center justify-end gap-4">
                         <flux:button variant="ghost" :href="route('tasks.index')">
                             {{ __('Cancel') }}

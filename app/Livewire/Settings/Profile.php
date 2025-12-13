@@ -14,6 +14,8 @@ class Profile extends Component
 
     public string $email = '';
 
+    public bool $email_notifications = true;
+
     /**
      * Mount the component.
      */
@@ -21,6 +23,7 @@ class Profile extends Component
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->email_notifications = Auth::user()->email_notifications ?? true;
     }
 
     /**
@@ -41,6 +44,8 @@ class Profile extends Component
                 'max:255',
                 Rule::unique(User::class)->ignore($user->id),
             ],
+
+            'email_notifications' => ['boolean'],
         ]);
 
         $user->fill($validated);

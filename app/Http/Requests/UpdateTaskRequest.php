@@ -24,6 +24,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'assigned_to_user_id' => ['nullable', 'exists:users,id'],
         ];
     }
 

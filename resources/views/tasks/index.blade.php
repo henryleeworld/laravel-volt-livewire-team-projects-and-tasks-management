@@ -23,6 +23,9 @@
                         <th class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                             {{ __('Name') }}
                         </th>
+                        <th class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                            {{ __('Assigned To') }}
+                        </th>
                         <th class="px-6 py-3 text-end text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                             {{ __('Actions') }}
                         </th>
@@ -33,6 +36,9 @@
                         <tr>
                             <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">
                                 {{ $task->name }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4 text-sm text-zinc-600 dark:text-zinc-300">
+                                {{ $task->assignedToUser?->name ?? __('Unassigned') }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-end text-sm">
                                 <div class="flex items-center justify-end gap-2">
@@ -76,7 +82,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="2" class="px-6 py-12 text-center">
+                            <td colspan="3" class="px-6 py-12 text-center">
                                 <flux:text class="text-zinc-500 dark:text-zinc-400">
                                     {{ __('No tasks yet. Create your first task to get started.') }}
                                 </flux:text>
