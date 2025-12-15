@@ -9,7 +9,7 @@
 
         <div class="mx-auto max-w-2xl">
             <div class="overflow-hidden rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
-                <form action="{{ route('tasks.store') }}" method="POST" class="space-y-6">
+                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
 
                     <div>
@@ -53,6 +53,28 @@
                             @endforeach
                         </flux:select>
                         @error('assigned_to_user_id')
+                            <flux:text class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</flux:text>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <flux:field>
+                            <flux:label>{{ __('Images') }}</flux:label>
+                            <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">
+                                {{ __('Upload up to 10 images (JPEG, PNG, GIF, WebP). Max 5MB each.') }}
+                            </flux:text>
+                            <input
+                                type="file"
+                                name="images[]"
+                                multiple
+                                accept="image/jpeg,image/png,image/gif,image/webp"
+                                class="mt-2 block w-full text-sm text-zinc-900 dark:text-zinc-100 file:mr-4 file:rounded-lg file:border-0 file:bg-zinc-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-zinc-700 hover:file:bg-zinc-200 dark:file:bg-zinc-700 dark:file:text-zinc-200 dark:hover:file:bg-zinc-600"
+                            />
+                        </flux:field>
+                        @error('images')
+                            <flux:text class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</flux:text>
+                        @enderror
+                        @error('images.*')
                             <flux:text class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</flux:text>
                         @enderror
                     </div>

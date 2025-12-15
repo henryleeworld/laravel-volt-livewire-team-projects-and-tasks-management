@@ -6,7 +6,9 @@ use App\Models\Organization;
 use App\Models\Task;
 use App\Models\User;
 use App\Notifications\TaskAssigned;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
@@ -552,5 +554,147 @@ class TaskTest extends TestCase
             ]);
 
         Notification::assertSentTo($assignee, TaskAssigned::class);
+    }
+
+    public function test_users_can_create_task_with_images()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $image1 = UploadedFile::fake()->image('img1.jpg');
+        $image2 = UploadedFile::fake()->image('img2.jpg');
+
+        $this->actingAs($user)
+            ->post(route('tasks.store'), [
+                'name' => 'Task with Images',
+                'images' => [$image1, $image2],
+            ])
+            ->assertRedirect(route('tasks.index'));
+
+        $task = Task::where('name', 'Task with Images')->first();
+
+        $this->assertNotNull($task);
+        $this->assertCount(2, $task->getMedia('images'));
+    }
+
+    public function test_users_can_add_images_when_updating_task()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $task = Task::factory()->create([
+            'user_id' => $user->id,
+            'organization_id' => $user->organization_id,
+        ]);
+
+        $image = UploadedFile::fake()->image('new.jpg');
+
+        $this->actingAs($user)
+            ->put(route('tasks.update', $task), [
+                'name' => $task->name,
+                'images' => [$image],
+            ]);
+
+        $task->refresh();
+
+        $this->assertCount(1, $task->getMedia('images'));
+    }
+
+    public function test_users_can_delete_images_when_updating_task()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $task = Task::factory()->create([
+            'user_id' => $user->id,
+            'organization_id' => $user->organization_id,
+        ]);
+
+        $task->addMedia(
+            UploadedFile::fake()->image('old.jpg')
+        )->toMediaCollection('images');
+
+        $mediaId = $task->getFirstMedia('images')->id;
+
+        $this->actingAs($user)
+            ->put(route('tasks.update', $task), [
+                'name' => $task->name,
+                'delete_images' => [$mediaId],
+            ]);
+
+        $task->refresh();
+
+        $this->assertCount(0, $task->getMedia('images'));
+    }
+
+    public function test_image_validation_rejects_non_image_files()
+    {
+        $user = User::factory()->create();
+        $file = UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf');
+
+        $this->actingAs($user)
+            ->post(route('tasks.store'), [
+                'name' => 'Invalid',
+                'images' => [$file],
+            ])
+            ->assertSessionHasErrors('images.0');
+    }
+
+    public function test_image_upload_validation_rejects_files_exceeding_size_limit()
+    {
+        $user = User::factory()->create();
+        $largeImage = UploadedFile::fake()
+            ->image('large-image.jpg')
+            ->size(6000);
+
+        $this->actingAs($user)
+            ->post(route('tasks.store'), [
+                'name' => 'Task with large image',
+                'images' => [$largeImage],
+            ])
+            ->assertSessionHasErrors(['images.0']);
+    }
+
+    public function test_task_show_page_displays_images()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $task = Task::factory()->create([
+            'organization_id' => $user->organization_id,
+            'user_id' => $user->id,
+        ]);
+
+        $task->addMedia(
+            UploadedFile::fake()->image('show-image.jpg', 800, 600)
+        )->toMediaCollection('images');
+
+        $this->actingAs($user)
+            ->get(route('tasks.show', $task))
+            ->assertSuccessful()
+            ->assertSee(__('Images'));
+    }
+
+    public function test_task_index_page_displays_thumbnail()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $task = Task::factory()->create([
+            'name' => 'Task with Thumbnail',
+            'organization_id' => $user->organization_id,
+            'user_id' => $user->id,
+        ]);
+
+        $task->addMedia(
+            UploadedFile::fake()->image('thumbnail-test.jpg', 800, 600)
+        )->toMediaCollection('images');
+
+        $this->actingAs($user)
+            ->get(route('tasks.index'))
+            ->assertSuccessful()
+            ->assertSee('Task with Thumbnail');
     }
 }

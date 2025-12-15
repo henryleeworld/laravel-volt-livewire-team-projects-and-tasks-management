@@ -20,7 +20,7 @@ class TaskController extends Controller
         Gate::authorize('viewAny', Task::class);
 
         $tasks = Task::query()
-            ->with('assignedToUser')
+            ->with('assignedToUser', 'media')
             ->where('organization_id', auth()->user()->organization_id)
             ->orderByDesc('created_at')
             ->get();
@@ -36,6 +36,8 @@ class TaskController extends Controller
     public function show(Task $task): View
     {
         Gate::authorize('view', $task);
+
+        $task->load('media');
 
         $activities = $task->activities()
             ->with('causer')
@@ -86,6 +88,12 @@ class TaskController extends Controller
             'assigned_to_user_id' => $validated['assigned_to_user_id'] ?? null,
         ]);
 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $task->addMedia($image)->toMediaCollection('images');
+            }
+        }
+
         if ($task->assigned_to_user_id) {
             $task->assignedToUser->notify(new TaskAssigned($task));
         }
@@ -101,6 +109,8 @@ class TaskController extends Controller
     public function edit(Task $task): View
     {
         Gate::authorize('update', $task);
+
+        $task->load('media');
 
         $users = auth()->user()->organization->users()->orderBy('name')->get();
 
@@ -119,6 +129,19 @@ class TaskController extends Controller
         $previousAssignedUserId = $task->assigned_to_user_id;
 
         $task->update($validated);
+
+        if (! empty($validated['delete_images'])) {
+            $task->media()
+                ->whereIn('id', $validated['delete_images'])
+                ->get()
+                ->each(fn ($media) => $media->delete());
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $task->addMedia($image)->toMediaCollection('images');
+            }
+        }
 
         if (isset($validated['assigned_to_user_id']) && $validated['assigned_to_user_id'] !== $previousAssignedUserId && $validated['assigned_to_user_id'] !== null) {
             $task->assignedToUser->notify(new TaskAssigned($task));

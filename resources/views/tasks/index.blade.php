@@ -21,6 +21,9 @@
                 <thead class="bg-zinc-50 dark:bg-zinc-800">
                     <tr>
                         <th class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                            {{ __('Image') }}
+                        </th>
+                        <th class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                             {{ __('Name') }}
                         </th>
                         <th class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
@@ -34,6 +37,19 @@
                 <tbody class="divide-y divide-zinc-200 bg-white dark:divide-zinc-700 dark:bg-zinc-900">
                     @forelse ($tasks as $task)
                         <tr>
+                            <td class="whitespace-nowrap px-6 py-4 text-sm">
+                                @if($task->getFirstMedia('images'))
+                                    <img
+                                        src="{{ $task->getFirstMediaUrl('images', 'thumb') }}"
+                                        alt="{{ $task->name }}"
+                                        class="h-10 w-10 rounded-lg object-cover"
+                                    />
+                                @else
+                                    <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                                        <flux:icon name="photo" class="h-5 w-5 text-zinc-400" />
+                                    </div>
+                                @endif
+                            </td>
                             <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">
                                 {{ $task->name }}
                             </td>
@@ -82,7 +98,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-12 text-center">
+                            <td colspan="4" class="px-6 py-12 text-center">
                                 <flux:text class="text-zinc-500 dark:text-zinc-400">
                                     {{ __('No tasks yet. Create your first task to get started.') }}
                                 </flux:text>

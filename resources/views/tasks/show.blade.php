@@ -47,6 +47,30 @@
                             {{ $task->updated_at->format('M d, Y \a\t H:i') }}
                         </dd>
                     </div>
+
+                    @if($task->getMedia('images')->count() > 0)
+                        <div>
+                            <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400">{{ __('Images') }}</dt>
+                            <dd class="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                                @foreach($task->getMedia('images') as $media)
+                                    <a
+                                        href="{{ $media->getUrl() }}"
+                                        target="_blank"
+                                        class="group relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+                                    >
+                                        <img
+                                            src="{{ $media->getUrl('preview') }}"
+                                            alt="{{ $media->name }}"
+                                            class="h-32 w-full object-cover transition-transform group-hover:scale-105"
+                                        />
+                                        <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/30">
+                                            <flux:icon name="arrow-top-right-on-square" class="h-6 w-6 text-white opacity-0 transition-opacity group-hover:opacity-100" />
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </dd>
+                        </div>
+                    @endif
                 </dl>
             </div>
             @if ($activities->isNotEmpty())

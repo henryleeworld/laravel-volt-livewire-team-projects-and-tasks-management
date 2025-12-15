@@ -20,6 +20,10 @@ $ php artisan key:generate
 ```sh
 $ php artisan migrate --seed
 ```
+- 執行 __Artisan__ 指令的 __storage:link__ 來建立連結符號，讓公用可存取的檔案維持在一個目錄中。
+```sh
+$ php artisan storage:link
+```
 - 執行安裝 Vite 和 Laravel 擴充套件引用的依賴項目。
 ```sh
 $ npm install
@@ -39,11 +43,11 @@ $ php artisan test
 ----
 
 ## 畫面截圖
-![](https://i.imgur.com/6TvFmBE.png)
+![](https://i.imgur.com/HpdAlb8.png)
 > 檢查程式碼是否如預期般執行
 
-![](https://i.imgur.com/DDQ99Pe.png)
+![](https://i.imgur.com/yjrBgjg.png)
 > 確認需求、定義成功標準，並評估可行性及風險，確保專案具備明確方向
 
-![](https://i.imgur.com/T3oevSN.png)
+![](https://i.imgur.com/foK58g6.png)
 > 將複雜任務拆解為清晰、可控的步驟，且每個階段皆有明確目標

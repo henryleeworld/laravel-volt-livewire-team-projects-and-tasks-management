@@ -26,6 +26,8 @@ class StoreTaskRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'assigned_to_user_id' => ['nullable', 'exists:users,id'],
+            'images' => ['nullable', 'array', 'max:10'],
+            'images.*' => ['image', 'mimes:jpeg,png,gif,webp', 'max:5120'],
         ];
     }
 
@@ -34,6 +36,10 @@ class StoreTaskRequest extends FormRequest
         return [
             'name.required' => __('Please provide a task name.'),
             'name.max' => __('The task name must not exceed 255 characters.'),
+            'images.max' => __('You can upload a maximum of 10 images.'),
+            'images.*.image' => __('Each file must be an image.'),
+            'images.*.mimes' => __('Images must be jpeg, png, gif, or webp format.'),
+            'images.*.max' => __('Each image must not exceed 5MB.'),
         ];
     }
 }
