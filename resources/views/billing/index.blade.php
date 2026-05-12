@@ -109,14 +109,14 @@
                 <div class="inline-flex items-center gap-3 rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
                     <button
                         type="button"
-                        onclick="document.querySelectorAll('[data-billing-monthly]').forEach(el => el.classList.remove('hidden')); document.querySelectorAll('[data-billing-yearly]').forEach(el => el.classList.add('hidden')); this.classList.add('bg-white', 'dark:bg-zinc-900', 'shadow-sm'); this.nextElementSibling.classList.remove('bg-white', 'dark:bg-zinc-900', 'shadow-sm');"
+                        onclick="document.querySelectorAll('[data-billing-monthly]').forEach(el => el.classList.remove('hidden')); document.querySelectorAll('[data-billing-yearly]').forEach(el => el.classList.add('hidden'));  this.classList.add('bg-white', 'dark:bg-zinc-900', 'shadow-sm'); this.nextElementSibling.classList.remove('bg-white', 'dark:bg-zinc-900', 'shadow-sm'); document.querySelectorAll('input[data-billing-monthly]').forEach(el => el.removeAttribute('disabled')); document.querySelectorAll('input[data-billing-yearly]').forEach(el => el.setAttribute('disabled', 'disabled'));"
                         class="rounded-md px-4 py-2 text-sm font-medium transition-all bg-white dark:bg-zinc-900 shadow-sm"
                     >
                         {{ __('Monthly') }}
                     </button>
                     <button
                         type="button"
-                        onclick="document.querySelectorAll('[data-billing-yearly]').forEach(el => el.classList.remove('hidden')); document.querySelectorAll('[data-billing-monthly]').forEach(el => el.classList.add('hidden')); this.classList.add('bg-white', 'dark:bg-zinc-900', 'shadow-sm'); this.previousElementSibling.classList.remove('bg-white', 'dark:bg-zinc-900', 'shadow-sm');"
+                        onclick="document.querySelectorAll('[data-billing-yearly]').forEach(el => el.classList.remove('hidden')); document.querySelectorAll('[data-billing-monthly]').forEach(el => el.classList.add('hidden')); this.classList.add('bg-white', 'dark:bg-zinc-900', 'shadow-sm'); this.previousElementSibling.classList.remove('bg-white', 'dark:bg-zinc-900', 'shadow-sm'); document.querySelectorAll('input[data-billing-yearly]').forEach(el => el.removeAttribute('disabled')); document.querySelectorAll('input[data-billing-monthly]').forEach(el => el.setAttribute('disabled', 'disabled'));"
                         class="rounded-md px-4 py-2 text-sm font-medium transition-all"
                     >
                         {{ __('Yearly') }}
@@ -205,7 +205,7 @@
                             <form action="{{ route('billing.subscribe') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="price_id" value="{{ $plan['prices']['monthly'] }}" data-billing-monthly>
-                                <input type="hidden" name="price_id" value="{{ $plan['prices']['yearly'] }}" data-billing-yearly class="hidden">
+                                <input type="hidden" name="price_id" value="{{ $plan['prices']['yearly'] }}" data-billing-yearly class="hidden" disabled>
                                 <flux:button variant="primary" type="submit" class="w-full">
                                     {{ __('Subscribe') }}
                                 </flux:button>
